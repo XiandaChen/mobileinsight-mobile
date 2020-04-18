@@ -11,14 +11,14 @@ from kivy.clock import Clock
 
 from jnius import autoclass, cast
 
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import json
 import re
 import os
 import threading
 import re
 import datetime
-import main_utils
+from . import main_utils
 
 __all__ = ["check_update"]
 
@@ -107,7 +107,7 @@ def install_apk(apk_path):
 
 def download_thread(apk_url, apk_path):
     try:
-        urllib.urlretrieve(apk_url, apk_path)
+        urllib.request.urlretrieve(apk_url, apk_path)
         install_apk(apk_path)
     finally:
         main_utils.detach_thread()
@@ -162,9 +162,9 @@ def check_update():
 
     # retrieve latest metadata
     try:
-        urllib.urlretrieve(update_meta_url, update_meta_path)
+        urllib.request.urlretrieve(update_meta_url, update_meta_path)
     except Exception as e:
-        print "Connection failure: stop checking update"
+        print("Connection failure: stop checking update")
         return
 
     if not os.path.isfile(update_meta_path):

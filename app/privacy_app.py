@@ -7,17 +7,17 @@ from kivy.uix.gridlayout import GridLayout
 from kivy.uix.popup import Popup
 from kivy.properties import *
 from kivy.config import ConfigParser, Config
-from kivymd.theming import ThemeManager
+from .kivymd.theming import ThemeManager
 
-import httplib
-import urllib
-import urllib2
+import http.client
+import urllib.request, urllib.parse, urllib.error
+import urllib.request, urllib.error, urllib.parse
 import subprocess
 import os
 import sys
 import re
 import datetime
-import main_utils
+from . import main_utils
 
 __all__ = ["PrivacyPopup", "PrivacyApp", "disagree_privacy"]
 

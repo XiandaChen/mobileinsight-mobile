@@ -13,14 +13,15 @@ from service.control import Control, OSCConfig
 from service import mi2app_utils
 from service import GpsListener
 import kivy
+import importlib
 kivy.require('1.4.0')
 
-reload(sys)
+importlib.reload(sys)
 sys.setdefaultencoding('utf8')
 
 
 def receive_signal(signum, stack):
-    print 'Received:', signum
+    print('Received:', signum)
 
 class MyFormatter(logging.Formatter):
     converter = dt.datetime.fromtimestamp
@@ -134,7 +135,7 @@ def exec_legacy(arg):
         gps_provider = GpsListener(on_gps)
         gps_provider.start()
 
-        execfile(app_file, namespace)
+        exec(compile(open(app_file, "rb").read(), app_file, 'exec'), namespace)
 
         # print app_name, "stops normally"
 

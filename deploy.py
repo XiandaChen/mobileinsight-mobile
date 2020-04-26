@@ -15,12 +15,13 @@ Version : 2.4 -- 2017/10/05 automate password arguments for release version
 '''
 
 import os
+import subprocess
 import sys
+
 import yaml
-import subprocess
-import subprocess
 
 LIBS_GIT = 'https://github.com/mobile-insight/mobileinsight-libs.git'
+
 
 def run_config():
     os.system(
@@ -35,83 +36,82 @@ def run_config():
     os.system('tail -n+8 ./config/config_template.yml > ./config/config.yml')
     print('Edit ./config/config.yml to customize your configuration!')
 
+
 def run_dist():
     build_dist_cmd = 'python-for-android create' \
-        + ' --dist-name={}'.format(cfg['dist_name']) \
-        + ' --bootstrap={}'.format(cfg['bootstrap']) \
-        + ' --storage-dir={}'.format(cfg['p4a_path']) \
-        + ' --sdk-dir={}'.format(cfg['sdk_path']) \
-        + ' --android-api={}'.format(cfg['api_level']) \
-        + ' --minsdk={}'.format(cfg['minsdk']) \
-        + ' --ndk-dir={}'.format(cfg['ndk_path']) \
-        + ' --ndk-version={}'.format(cfg['ndk_version']) \
-        + ' --arch={}'.format(cfg['arch']) \
-        + ' --requirements={}'.format(cfg['requirements'])
+                     + ' --dist-name={}'.format(cfg['dist_name']) \
+                     + ' --bootstrap={}'.format(cfg['bootstrap']) \
+                     + ' --storage-dir={}'.format(cfg['p4a_path']) \
+                     + ' --sdk-dir={}'.format(cfg['sdk_path']) \
+                     + ' --android-api={}'.format(cfg['api_level']) \
+                     + ' --minsdk={}'.format(cfg['minsdk']) \
+                     + ' --ndk-dir={}'.format(cfg['ndk_path']) \
+                     + ' --ndk-version={}'.format(cfg['ndk_version']) \
+                     + ' --arch={}'.format(cfg['arch']) \
+                     + ' --requirements={}'.format(cfg['requirements'])
 
     print(build_dist_cmd)
     os.system(build_dist_cmd)
 
 
 def run_apk(build_release):
-
     make_diag_cmd = 'cd diag_revealer/qcom/jni; ' \
-                      + 'rm diag_revealer; ' \
-                      + 'make; ' \
-                      + 'cd ../../mtk/jni; ' \
-                      + 'rm diag_revealer_mtk; ' \
-                      + 'make;'
+                    + 'rm diag_revealer; ' \
+                    + 'make; ' \
+                    + 'cd ../../mtk/jni; ' \
+                    + 'rm diag_revealer_mtk; ' \
+                    + 'make;'
 
     build_cmd = 'python-for-android apk' \
-        + ' --copy-libs' \
-        + ' --name={}'.format(cfg['app_name']) \
-        + ' --dist-name={}'.format(cfg['dist_name']) \
-        + ' --storage-dir={}'.format(cfg['p4a_path']) \
-        + ' --version={}'.format(cfg['app_version']) \
-        + ' --private={}/{}'.format(cfg['mi_dev_path'], cfg['app_path']) \
-        + ' --package={}'.format(cfg['pkg_name']) \
-        + ' --icon={}/{}'.format(cfg['mi_dev_path'], cfg['icon_path']) \
-        + ' --presplash={}/{}'.format(cfg['mi_dev_path'], cfg['presplash_path']) \
-        + ' --orientation={}'.format(cfg['orientation']) \
-        + ' --sdk-dir={}'.format(cfg['sdk_path']) \
-        + ' --android-api={}'.format(cfg['api_level']) \
-        + ' --minsdk={}'.format(cfg['minsdk']) \
-        + ' --ndk-dir={}'.format(cfg['ndk_path']) \
-        + ' --ndk-version={}'.format(cfg['ndk_version']) \
-        + ' --arch={}'.format(cfg['arch']) \
-        + ' --whitelist={}/{}'.format(cfg['mi_dev_path'], cfg['whitelist']) \
-        + ' --permission WRITE_EXTERNAL_STORAGE' \
-        + ' --permission READ_EXTERNAL_STORAGE' \
-        + ' --permission INTERNET' \
-        + ' --permission RECEIVE_BOOT_COMPLETED' \
-        + ' --permission ACCESS_WIFI_STATE' \
-        + ' --permission INSTALL_PACKAGES' \
-        + ' --permission ACCESS_NETWORK_STATE' \
-        + ' --permission ACCESS_FINE_LOCATION' \
-        + ' --permission ACCESS_COARSE_LOCATION'
+                + ' --copy-libs' \
+                + ' --name={}'.format(cfg['app_name']) \
+                + ' --dist-name={}'.format(cfg['dist_name']) \
+                + ' --storage-dir={}'.format(cfg['p4a_path']) \
+                + ' --version={}'.format(cfg['app_version']) \
+                + ' --private={}/{}'.format(cfg['mi_dev_path'], cfg['app_path']) \
+                + ' --package={}'.format(cfg['pkg_name']) \
+                + ' --icon={}/{}'.format(cfg['mi_dev_path'], cfg['icon_path']) \
+                + ' --presplash={}/{}'.format(cfg['mi_dev_path'], cfg['presplash_path']) \
+                + ' --orientation={}'.format(cfg['orientation']) \
+                + ' --sdk-dir={}'.format(cfg['sdk_path']) \
+                + ' --android-api={}'.format(cfg['api_level']) \
+                + ' --minsdk={}'.format(cfg['minsdk']) \
+                + ' --ndk-dir={}'.format(cfg['ndk_path']) \
+                + ' --ndk-version={}'.format(cfg['ndk_version']) \
+                + ' --arch={}'.format(cfg['arch']) \
+                + ' --whitelist={}/{}'.format(cfg['mi_dev_path'], cfg['whitelist']) \
+                + ' --permission WRITE_EXTERNAL_STORAGE' \
+                + ' --permission READ_EXTERNAL_STORAGE' \
+                + ' --permission INTERNET' \
+                + ' --permission RECEIVE_BOOT_COMPLETED' \
+                + ' --permission ACCESS_WIFI_STATE' \
+                + ' --permission INSTALL_PACKAGES' \
+                + ' --permission ACCESS_NETWORK_STATE' \
+                + ' --permission ACCESS_FINE_LOCATION' \
+                + ' --permission ACCESS_COARSE_LOCATION'
     # + ' --intent-filters BOOT_COMPLETED'
 
     if build_release is True:
         clean_cmd = 'rm {}-{}.apk'.format(cfg['app_name'], cfg['app_version'])
 
         build_cmd = build_cmd + ' --release' \
-                + ' --keystore={}'.format(cfg['keystore']) \
-                + ' --keystorepw={}'.format(cfg['keystorepw']) \
-                + ' --signkey={}'.format(cfg['signkey']) \
-                + ' --signkeypw={}'.format(cfg['signkeypw'])
+                    + ' --keystore={}'.format(cfg['keystore']) \
+                    + ' --keystorepw={}'.format(cfg['keystorepw']) \
+                    + ' --signkey={}'.format(cfg['signkey']) \
+                    + ' --signkeypw={}'.format(cfg['signkeypw'])
 
         sign_cmd = 'jarsigner -verbose' \
-                + ' -sigalg SHA1withRSA' \
-                + ' -digestalg SHA1' \
-                + ' -keystore {}'.format(cfg['keystore']) \
-                + ' -storepass {}'.format(cfg['keystorepw']) \
-                + ' -keypass {}'.format(cfg['signkeypw']) \
-                + ' {p4a}/dists/{dist}/bin/{app}-{ver}-release-unsigned.apk {key}'.format(
-                    p4a=cfg['p4a_path'],
-                    dist=cfg['dist_name'],
-                    app=cfg['app_name'],
-                    ver=cfg['app_version'],
-                    key=cfg['signkey'])
-
+                   + ' -sigalg SHA1withRSA' \
+                   + ' -digestalg SHA1' \
+                   + ' -keystore {}'.format(cfg['keystore']) \
+                   + ' -storepass {}'.format(cfg['keystorepw']) \
+                   + ' -keypass {}'.format(cfg['signkeypw']) \
+                   + ' {p4a}/dists/{dist}/bin/{app}-{ver}-release-unsigned.apk {key}'.format(
+            p4a=cfg['p4a_path'],
+            dist=cfg['dist_name'],
+            app=cfg['app_name'],
+            ver=cfg['app_version'],
+            key=cfg['signkey'])
 
         zipalign_path = ""
         for subdir, dirs, files in os.walk(
@@ -122,7 +122,8 @@ def run_apk(build_release):
                     break
 
         align_cmd = '{zipalign} -v 4 {p4a}/dists/{dist}/bin/{app}-{ver}-release-unsigned.apk {app}-{ver}.apk'.format(
-            zipalign=zipalign_path, p4a=cfg['p4a_path'], dist=cfg['dist_name'], app=cfg['app_name'], ver=cfg['app_version'])
+            zipalign=zipalign_path, p4a=cfg['p4a_path'], dist=cfg['dist_name'], app=cfg['app_name'],
+            ver=cfg['app_version'])
 
         os.system(clean_cmd)
         os.system(make_diag_cmd)
